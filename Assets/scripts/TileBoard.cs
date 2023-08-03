@@ -32,19 +32,19 @@ public class TileBoard : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-
+            movetiles(Vector2Int.up,0,1,1,1);
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            
+            movetiles(Vector2Int.down,0,1,Grid.height-2,-1);
         }
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            
+            movetiles(Vector2Int.left,1,1,0,1);
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            
+            movetiles(Vector2Int.right,Grid.height-2,-1,0,1);
         }
     }
 
@@ -54,8 +54,26 @@ public class TileBoard : MonoBehaviour
         {
             for (int y = stary; y < Grid.height; y+=incrementy)
             {
-                
+                tilecell cell = Grid.getcell(x, y);
+                if (cell.occupied)
+                {
+                    movetile(cell.Tile,direction);
+                }
             }
+        }
+    }
+    void movetile(tile Tile ,Vector2Int direction)
+    {
+        tilecell newscell = null;
+        tilecell adjacent = Grid.getadjacent(Tile.cell,direction);
+        while (adjacent!=null)
+        {
+            if (adjacent.occupied)
+            {
+                break;
+            }
+            newscell = adjacent;
+            adjacent = Grid.getadjacent(adjacent,direction); 
         }
     }
 }
