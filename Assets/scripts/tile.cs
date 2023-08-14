@@ -10,6 +10,7 @@ public class tile : MonoBehaviour
    public tilestats State { get; private set; }
    public tilecell cell { get; private set; }
    public int number { get; private set; }
+   public bool locked { get;  set; }
    public Image background;
    public TextMeshProUGUI text;
 
@@ -60,6 +61,7 @@ public class tile : MonoBehaviour
       }
 
       this.cell = null;
+      cell.Tile.locked = true;
       StartCoroutine(animate(cell.transform.position,true));
    }
 
