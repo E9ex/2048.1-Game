@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
         board.clearboard();
         board.createTile();
         board.createTile();
-        board.createTile();
         board.enabled = true;
     }
 
