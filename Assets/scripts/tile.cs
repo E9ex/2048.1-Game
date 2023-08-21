@@ -10,7 +10,7 @@ public class tile : MonoBehaviour
    public tilestats State { get; private set; }
    public tilecell cell { get; private set; }
    public int number { get; private set; }
-   public bool locked { get;  set; }
+   public bool locked { get;   set; }
    public Image background;
    public TextMeshProUGUI text;
 
@@ -21,10 +21,10 @@ public class tile : MonoBehaviour
       text = GetComponentInChildren<TextMeshProUGUI>();
    }
 
-   public void setstate(tilestats state,int Number)
+   public void setstate(tilestats state)
    {
       this.State = state;
-      this.number = Number;
+      
       background.color = state.backgroundColor;
       text.color = state.textColor;
       text.text = number.ToString();
@@ -50,7 +50,7 @@ public class tile : MonoBehaviour
       this.cell = cell;
       this.cell.Tile = this;
       transform.position = cell.transform.position;
-      StartCoroutine(animate(cell.transform.position,false)); 
+      StartCoroutine(Animate(cell.transform.position,false)); 
    }
 
    public void merge(tilecell tilecell)
@@ -62,23 +62,26 @@ public class tile : MonoBehaviour
 
       this.cell = null;
       cell.Tile.locked = true;
-      StartCoroutine(animate(cell.transform.position,true));
+      StartCoroutine(Animate(cell.transform.position,true));
    }
 
-   private IEnumerator animate(Vector3 to ,bool merging)
+   private IEnumerator Animate(Vector3 to, bool merging)
    {
       float elapsed = 0f;
       float duration = 0.1f;
+
       Vector3 from = transform.position;
-      while (elapsed<duration)
+
+      while (elapsed < duration)
       {
          transform.position = Vector3.Lerp(from, to, elapsed / duration);
          elapsed += Time.deltaTime;
          yield return null;
       }
+
       transform.position = to;
-      if (merging )
-      {
+
+      if (merging) {
          Destroy(gameObject);
       }
    }

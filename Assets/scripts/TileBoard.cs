@@ -21,6 +21,10 @@ public class TileBoard : MonoBehaviour
 
     public void clearboard()
     {
+        foreach (var cell in Grid.Tilecells)
+        {
+            cell.Tile = null; 
+        }
         foreach (var tile in _tiles )
         {
             Destroy(tile.gameObject);
@@ -32,7 +36,7 @@ public class TileBoard : MonoBehaviour
     public  void createTile()
     {
        tile Tile= Instantiate(tileprfab, Grid.transform);
-       Tile.setstate(tileStates[0],2);
+       Tile.setstate(tileStates[0]);
        Tile.Spawn(Grid.getrandomemptycell());
        _tiles.Add(Tile);
     }
@@ -41,24 +45,16 @@ public class TileBoard : MonoBehaviour
     {
         if (!waiting)
         {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                movetiles(Vector2Int.up,0,1,1,1);
-            }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                movetiles(Vector2Int.down,0,1,Grid.height-2,-1);
-            }
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                movetiles(Vector2Int.left,1,1,0,1);
-            }
-            else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                movetiles(Vector2Int.right,Grid.height-2,-1,0,1);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
+                movetiles(Vector2Int.up, 0, 1, 1, 1);
+            } else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+                movetiles(Vector2Int.left, 1, 1, 0, 1);
+            } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
+                movetiles(Vector2Int.down, 0, 1, Grid.height - 2, -1);
+            } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
+                movetiles(Vector2Int.right, Grid.width - 2, -1, 0, 1);
             }
         }
-       
     }
 
     private void movetiles(Vector2Int direction,int starx,int incrementx,int stary,int incrementy)
@@ -71,34 +67,42 @@ public class TileBoard : MonoBehaviour
                 tilecell cell = Grid.getcell(x, y);
                 if (cell.occupied)
                 {
-                   changed= movetile(cell.Tile,direction);
+                   changed |= MoveTile(cell.Tile,direction);
                 }
             }
         }
+        if (changed)
+        {
+            StartCoroutine(WaitforChanges());
+        }
     }
-    private bool movetile(tile Tile ,Vector2Int direction)
+    private bool MoveTile(tile tile, Vector2Int direction)
     {
-        tilecell newscell = null;
-        tilecell adjacent = Grid.getadjacent(Tile.cell,direction);
-        while (adjacent!=null)
+        tilecell newCell = null;
+        tilecell adjacent = Grid.GetAdjacentCell(tile.cell, direction);
+
+        while (adjacent != null)
         {
             if (adjacent.occupied)
             {
-                if (canMerge(Tile,adjacent.Tile))
+                if (canMerge(tile, adjacent.Tile))
                 {
-                    merge(Tile,adjacent.Tile);
+                    MergeTiles(tile, adjacent.Tile);
                     return true;
                 }
 
                 break;
             }
-            newscell = adjacent;
-            adjacent = Grid.getadjacent(adjacent,direction); 
+
+            newCell = adjacent;
+            adjacent = Grid.GetAdjacentCell(adjacent, direction);
         }
-        if (newscell!=null)
+
+        if (newCell != null)
         {
-            Tile.MoveTo(newscell);
+            tile.MoveTo(newCell);
             return true;
+
         }
 
         return false;
@@ -106,15 +110,19 @@ public class TileBoard : MonoBehaviour
 
     private bool canMerge(tile a,tile b )
     {
-        return a.number == b.number&&!b.locked;
+        return a.State == b.State&&!b.locked;
     }
 
-    private void merge(tile a, tile b)
+    private void MergeTiles(tile a, tile b)
     {
         _tiles.Remove(a);
         a.merge(b.cell);
-        int index = Mathf.Clamp(indexof(b.State) + 1, 0, tileStates.Length-1);
-        int number = b.number * 2;
+
+        int index = Mathf.Clamp(indexof(b.State) + 1, 0, tileStates.Length - 1);
+        tilestats newState = tileStates[index],number;
+
+        b.setstate(newState);
+        GameManager.IncreaseScore(newState.number);
     }
 
     private int indexof(tilestats tilestate)
@@ -160,10 +168,10 @@ public class TileBoard : MonoBehaviour
 
         foreach (var tile in _tiles)
         {
-            tilecell up = Grid.getadjacent(tile.cell, Vector2Int.up);
-            tilecell down = Grid.getadjacent(tile.cell, Vector2Int.down);
-            tilecell left = Grid.getadjacent(tile.cell, Vector2Int.left);
-            tilecell right  = Grid.getadjacent(tile.cell, Vector2Int.right);
+            tilecell up = Grid.GetAdjacentCell(tile.cell, Vector2Int.up);
+            tilecell down = Grid.GetAdjacentCell(tile.cell, Vector2Int.down);
+            tilecell left = Grid.GetAdjacentCell(tile.cell, Vector2Int.left);
+            tilecell right  = Grid.GetAdjacentCell(tile.cell, Vector2Int.right);
 
             if (up!=null&&canMerge(tile,up.Tile))
             {
@@ -177,7 +185,7 @@ public class TileBoard : MonoBehaviour
             {
                 return false;
             }
-            if (right!=null&&canMerge(tile,up.Tile))
+            if (right!=null&&canMerge(tile,right.Tile))
             {
                 return false;
             }
