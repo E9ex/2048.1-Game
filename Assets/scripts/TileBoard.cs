@@ -33,9 +33,9 @@ public class TileBoard : MonoBehaviour
          
     }
 
-    public  void createTile()
+    public void createTile()
     {
-       tile Tile= Instantiate(tileprfab, Grid.transform);
+       tile Tile = Instantiate(tileprfab, Grid.transform);
        Tile.setstate(tileStates[0]);
        Tile.Spawn(Grid.GetRandomEmptyCell());
        _tiles.Add(Tile);
@@ -60,9 +60,9 @@ public class TileBoard : MonoBehaviour
     private void move(Vector2Int direction,int starx,int incrementx,int stary,int incrementy)
     {
         bool changed = false;
-        for (int x = starx; x>=0&& x < Grid.width; x+=incrementx)
+        for (int x = starx; x >= 0 && x < Grid.width; x+=incrementx)
         {
-            for (int y = stary; y>=0&&y < Grid.height; y+=incrementy)
+            for (int y = stary; y >= 0 && y < Grid.height; y+=incrementy)
             {
                 tilecell cell = Grid.GetCell(x, y);
                 if (cell.occupied)
@@ -146,7 +146,6 @@ public class TileBoard : MonoBehaviour
         foreach (var tile in _tiles)
         {
             tile.locked = false;
-            
         }
         if (_tiles.Count!=Grid.size)
         {

@@ -23,11 +23,11 @@ public class tile : MonoBehaviour
 
    public void setstate(tilestats state)
    {
-      this.State = state;
+      State = state;
       
       background.color = state.backgroundColor;
-      text.color = state.textColor;
-      text.text = number.ToString();
+      text.color = State.textColor;
+      text.text = State.number.ToString();
    }
 
    public void Spawn(tilecell cell)
@@ -55,14 +55,23 @@ public class tile : MonoBehaviour
 
    public void merge(tilecell tilecell)
    {
-      if (this.cell!=null)
-      {
-         this.cell.Tile = null;
-      }
-
-      this.cell = null;
-      cell.Tile.locked = true;
-      StartCoroutine(Animate(cell.transform.position,true));
+      // if (this.cell!=null)
+      // {
+      //    this.cell.Tile = null;
+      // }
+      //
+      // this.cell = null;
+      tilecell.Tile.locked = true;
+      StartCoroutine(Animate(tilecell.transform.position,true));
+      
+      // if (this.cell != null)
+      // {
+      //    this.cell.Tile = null;
+      // }
+      //
+      // this.cell = null;
+      // cell.Tile.locked = true;
+      // StartCoroutine(Animate(cell.transform.position,true));
    }
 
    private IEnumerator Animate(Vector3 to, bool merging)

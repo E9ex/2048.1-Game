@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         hiscoretext.text = LoadHiscore().ToString();
         Gameover.alpha = 0f;
         Gameover.interactable = false;
+        board.clearboard();
         board.createTile();
         board.createTile();
         board.createTile();
