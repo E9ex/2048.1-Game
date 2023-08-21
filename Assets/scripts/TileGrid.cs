@@ -15,55 +15,58 @@ public class TileGrid : MonoBehaviour
    private void Awake()
    {
       Rows = GetComponentsInChildren<TileRow>();
-      Tilecells = GetComponentsInChildren<tilecell>(); 
+      Tilecells = GetComponentsInChildren<tilecell>();
    }
 
    private void Start()
    {
-      for (int y = 0; y < Rows.Length; y++)
+      for (int i = 0; i < Rows.Length; i++)
       {
-         for (int x = 0; x < Rows[y].cell.Length; x++)
+         for (int j = 0; j < Rows[i].cell.Length; j++)
          {
-            Rows[y].cell[x].coordinates = new Vector2Int(x,y);
+            Rows[i].cell[j].coordinates = new Vector2Int(j, i);
          }
       }
    }
-   
-   public tilecell getcell(int x, int y)
+
+   public tilecell GetCell(Vector2Int coordinates)
    {
-      if (x >= 0 && x < width && y >= 0 && y < height)
-      {
+      return GetCell(coordinates.x, coordinates.y);
+   }
+
+   public tilecell GetCell(int x, int y)
+   {
+      if (x >= 0 && x < width && y >= 0 && y < height) {
          return Rows[y].cell[x];
-      }else {
+      } else {
          return null;
-      } 
+      }
    }
-   public tilecell getcell(Vector2Int coordinates)
-   {
-      return getcell(coordinates.x,coordinates.y);
-   }
+
    public tilecell GetAdjacentCell(tilecell cell, Vector2Int direction)
    {
       Vector2Int coordinates = cell.coordinates;
       coordinates.x += direction.x;
       coordinates.y -= direction.y;
 
-      return getcell(coordinates);
+      return GetCell(coordinates);
    }
 
-   public tilecell getrandomemptycell()
+   public tilecell GetRandomEmptyCell()
    {
-      int index = Random.Range(0,Tilecells.Length);
+      int index = Random.Range(0, Tilecells.Length);
       int startingIndex = index;
+
       while (Tilecells[index].occupied)
       {
          index++;
-         if (index >= Tilecells.Length)
-         {
+
+         if (index >= Tilecells.Length) {
             index = 0;
          }
-         if (index==startingIndex)
-         {
+
+        
+         if (index == startingIndex) {
             return null;
          }
       }

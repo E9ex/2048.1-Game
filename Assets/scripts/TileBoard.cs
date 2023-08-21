@@ -37,7 +37,7 @@ public class TileBoard : MonoBehaviour
     {
        tile Tile= Instantiate(tileprfab, Grid.transform);
        Tile.setstate(tileStates[0]);
-       Tile.Spawn(Grid.getrandomemptycell());
+       Tile.Spawn(Grid.GetRandomEmptyCell());
        _tiles.Add(Tile);
     }
 
@@ -46,25 +46,25 @@ public class TileBoard : MonoBehaviour
         if (!waiting)
         {
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
-                movetiles(Vector2Int.up, 0, 1, 1, 1);
+                move(Vector2Int.up, 0, 1, 1, 1);
             } else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-                movetiles(Vector2Int.left, 1, 1, 0, 1);
+                move(Vector2Int.left, 1, 1, 0, 1);
             } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
-                movetiles(Vector2Int.down, 0, 1, Grid.height - 2, -1);
+                move(Vector2Int.down, 0, 1, Grid.height - 2, -1);
             } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
-                movetiles(Vector2Int.right, Grid.width - 2, -1, 0, 1);
+                move(Vector2Int.right, Grid.width - 2, -1, 0, 1);
             }
         }
     }
 
-    private void movetiles(Vector2Int direction,int starx,int incrementx,int stary,int incrementy)
+    private void move(Vector2Int direction,int starx,int incrementx,int stary,int incrementy)
     {
         bool changed = false;
         for (int x = starx; x>=0&& x < Grid.width; x+=incrementx)
         {
             for (int y = stary; y>=0&&y < Grid.height; y+=incrementy)
             {
-                tilecell cell = Grid.getcell(x, y);
+                tilecell cell = Grid.GetCell(x, y);
                 if (cell.occupied)
                 {
                    changed |= MoveTile(cell.Tile,direction);
@@ -119,7 +119,7 @@ public class TileBoard : MonoBehaviour
         a.merge(b.cell);
 
         int index = Mathf.Clamp(indexof(b.State) + 1, 0, tileStates.Length - 1);
-        tilestats newState = tileStates[index],number;
+        tilestats newState = tileStates[index];
 
         b.setstate(newState);
         GameManager.IncreaseScore(newState.number);
@@ -155,7 +155,7 @@ public class TileBoard : MonoBehaviour
 
         if (checkforGameOver())
         {
-            GameManager.gameover();
+            GameManager.GameOver();
         }
     }
 

@@ -14,36 +14,40 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-       newgame();
+        NewGame();
     }
-    public void newgame()
+
+    public void NewGame()
     {
-        setscore(0);
-        hiscoretext.text = loadhisscore().ToString();
+        SetScore(0);
+        hiscoretext.text = LoadHiscore().ToString();
         Gameover.alpha = 0f;
         Gameover.interactable = false;
-        board.clearboard();
-        board.createTile(); 
+        board.createTile();
+        board.createTile();
         board.createTile();
         board.enabled = true;
     }
 
-    public void gameover()
+    public void GameOver()
     {
         board.enabled = false;
         Gameover.interactable = true;
-        StartCoroutine(fade(Gameover, 1f,1f));
+
+        StartCoroutine(Fade(Gameover, 1f, 1f));
     }
 
-    private IEnumerator fade(CanvasGroup canvasGroup,float to,float delay)
+    private IEnumerator Fade(CanvasGroup canvasGroup, float to, float delay = 0f)
     {
         yield return new WaitForSeconds(delay);
+
         float elapsed = 0f;
         float duration = 0.5f;
         float from = canvasGroup.alpha;
+
         while (elapsed < duration)
         {
-            canvasGroup.alpha = Mathf.Lerp(from, to,elapsed/duration);
+            canvasGroup.alpha = Mathf.Lerp(from, to, elapsed / duration);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -53,25 +57,30 @@ public class GameManager : MonoBehaviour
 
     public void IncreaseScore(int points)
     {
-        setscore(score+points);
+        SetScore(score + points);
     }
 
-    private void setscore(int score)
+    private void SetScore(int score)
     {
         this.score = score;
         scoretext.text = score.ToString();
+
+        SaveHiscore();
     }
 
-    void savescore()
+    private void SaveHiscore()
     {
-        int hiscore = loadhisscore();
-        if (score>hiscore)
-        {
-            PlayerPrefs.SetInt("hiscore",score);
+        int hiscore = LoadHiscore();
+
+        if (score > hiscore) {
+            PlayerPrefs.SetInt("hiscore", score);
         }
-        
     }
 
+    private int LoadHiscore()
+    {
+        return PlayerPrefs.GetInt("hiscore", 0);
+    }
     int loadhisscore()
     {
         return PlayerPrefs.GetInt("hiscore", 0);

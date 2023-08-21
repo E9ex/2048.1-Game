@@ -9,3 +9,4 @@ public class tilecell : MonoBehaviour
    public bool empty => Tile == null;
    public bool occupied => Tile != null;
 }
+ 
