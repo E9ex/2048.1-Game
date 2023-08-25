@@ -100,9 +100,9 @@ public class TileBoard : MonoBehaviour
 
         if (newCell != null)
         {
+            Debug.Log("MOVE!");
             tile.MoveTo(newCell);
             return true;
-
         }
 
         return false;

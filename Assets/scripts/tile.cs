@@ -1,16 +1,15 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class tile : MonoBehaviour
 {
-   public tilestats State { get; private set; }
-   public tilecell cell { get; private set; }
+   public tilestats State;// { get; private set; }
+   public tilecell cell;// { get; private set; }
+   
   // public int Number { get; private set; }
-   public bool locked { get;   set; }
+   public bool locked; //{ get;   set; }
    public Image background;
    public TextMeshProUGUI text;
 
@@ -43,13 +42,12 @@ public class tile : MonoBehaviour
 
    public void MoveTo(tilecell tcell)
    {
-      if (this.cell!=null)
-      {
-         this.cell.Tile = null;
-      }
-      this.cell = cell;
-      this.cell.Tile = this;
-      transform.position = cell.transform.position;
+      if (cell!=null)
+         cell.Tile = null;
+      cell = tcell;
+      tcell.Tile = this;
+      // cell.Tile = tcell.Tile;
+      // transform.position = cell.transform.position;
       StartCoroutine(Animate(cell.transform.position,false)); 
    }
 
