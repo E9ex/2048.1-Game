@@ -90,10 +90,8 @@ public class TileBoard : MonoBehaviour
                     MergeTiles(tile, adjacent.Tile);
                     return true;
                 }
-
                 break;
             }
-
             newCell = adjacent;
             adjacent = Grid.GetAdjacentCell(adjacent, direction);
         }
@@ -102,17 +100,13 @@ public class TileBoard : MonoBehaviour
         {
             tile.MoveTo(newCell);
             return true;
-
         }
-
         return false;
     }
-
     private bool canMerge(tile a,tile b )
     {
         return a.State == b.State&&!b.locked;
     }
-
     private void MergeTiles(tile a, tile b)
     {
         _tiles.Remove(a);
